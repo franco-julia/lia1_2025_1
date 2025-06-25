@@ -5,7 +5,7 @@ from google.adk.agents import Agent
 from google.adk.tools import agent_tool, google_search as AdkGoogleSearchTool
 import google.generativeai as genai
 
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or "AIzaSyBIosCu2QCVW3-uxd4cN0Euy7gXrhWswnk"
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY") or ""
 genai.configure(api_key=GOOGLE_API_KEY)
 
 class GeminiLlmConnection:
