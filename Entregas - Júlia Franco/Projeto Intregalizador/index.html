@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>TUIN - Tutor Inteligente</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #fce4ec);
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    #formulario {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 14px;
+      font-size: 16px;
+      border: 1px solid #bbb;
+      border-radius: 10px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #2c3e50;
+      box-shadow: 0 0 5px rgba(44, 62, 80, 0.3);
+    }
+
+    button {
+      padding: 14px 24px;
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #34495e;
+    }
+
+    #resposta {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      font-size: 17px;
+      line-height: 1.7;
+      border: 1px solid #ddd;
+      white-space: pre-wrap;
+      color: #333;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 600px) {
+      #formulario {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>TUIN - Tutor Inteligente</h1>
+
+  <div id="formulario">
+    <input type="text" id="pergunta" placeholder="Digite sua pergunta ou peça um quiz...">
+    <button onclick="enviar()">Enviar</button>
+  </div>
+
+  <div id="resposta">
+    👋 Bem-vindo!  
+    Você pode pedir um resumo, tirar dúvidas, testar com quizzes ou solicitar uma pesquisa.  
+    Experimente:<br><strong>resumo sobre célula</strong> ou <strong>quiz sobre Revolução Francesa</strong>.
+  </div>
+
+  <script>
+    function enviar() {
+      const pergunta = document.getElementById("pergunta").value;
+      if (!pergunta.trim()) return;
+
+      document.getElementById("resposta").innerHTML = "⏳ Processando...";
+
+      fetch("/tutor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pergunta: pergunta })
+      })
+      .then(resp => resp.json())
+      .then(data => {
+        document.getElementById("resposta").innerHTML = "<strong>Tutor:</strong><br>" + data.resposta;
+        document.getElementById("pergunta").value = "";
+      })
+      .catch(() => {
+        document.getElementById("resposta").innerHTML = "❌ Erro ao processar. Tente novamente.";
+      });
+    }
+
+    document.getElementById("pergunta").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        enviar();
+      }
+    });
+  </script>
+</body>
+</html>
